@@ -1,0 +1,38 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem; /* Reduced padding to make header height smaller */
+  background-color: #ffffff;
+  color: #282c34;
+}
+
+.logo img {
+  height: 60px; /* Increased height for better visibility */
+  width: auto;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav a {
+  color: #282c34;
+  margin: 0 1rem;
+  text-decoration: none;
+}
+
+.btn {
+  margin-left: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #28a745; /* Corrected green color */
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 25px;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #218838; /* Darker green on hover */
+}
