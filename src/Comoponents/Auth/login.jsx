@@ -1,57 +1,117 @@
-import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import React, { useState } from 'react';
+import { TextField, Button, Container, Typography, Grid, Box } from '@mui/material';
+import { styled } from '@mui/system';
 import { Link } from 'react-router-dom';
-import './Login.css';
 import logo from '../../Assets/logo.png';
 
-const LoginSchema = Yup.object().shape({
-  email: Yup.string().email('Invalid email').required('Required'),
-  password: Yup.string().min(6, 'Password too short').required('Required')
+const CustomButton = styled(Button)({
+  marginTop: '20px',
+  backgroundColor: 'green',
+  color: 'white',
+  '&:hover': {
+    backgroundColor: 'darkgreen',
+  },
 });
 
-const Login = () => (
-  <div className="login-container">
-    <div className="login-card">
-      <div className="logo-container">
-        <img src={logo} alt="App Logo" className="logo-auth" />
-      </div>
-      <h1>Login</h1>
-      <Formik
-        initialValues={{ email: '', password: '' }}
-        validationSchema={LoginSchema}
-        onSubmit={values => {
-          // Handle login logic here
-          console.log(values);
-        }}
-      >
-        {() => (
-          <Form>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <Field type="email" name="email" className="form-control" />
-              <ErrorMessage name="email" component="div" className="error" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <Field type="password" name="password" className="form-control" />
-              <ErrorMessage name="password" component="div" className="error" />
-            </div>
-            <button type="submit" className="btn">Login</button>
-          </Form>
-        )}
-      </Formik>
-      <p className="links">
-        <Link to="/forgot-password">Forgot Password?</Link>
-      </p>
-      <p className="links">
-        Don't have an account? <Link to="/">Sign Up</Link>
-      </p>
-      <p className="links">
-        <Link to="/privacy-policy">Privacy Policy</Link> | <Link to="/terms-of-service">Terms of Service</Link>
-      </p>
-    </div>
-  </div>
-);
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({ email: '', password: '' });
+
+  const validate = () => {
+    let tempErrors = { email: '', password: '' };
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      tempErrors.email = 'Invalid email';
+    }
+    if (password.length < 6) {
+      tempErrors.password = 'Password too short';
+    }
+    setErrors(tempErrors);
+    return Object.values(tempErrors).every(x => x === '');
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (validate()) {
+      // Handle login logic here
+      console.log({ email, password });
+    }
+  };
+
+  return (
+    <Container
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        backgroundColor: '#f9f9f9',
+      }}
+    >
+      <Grid container justifyContent="center" alignItems="center">
+        <Grid item xs={12} sm={8} md={6} lg={4}>
+          <Box
+            sx={{
+              padding: '20px',
+              border: '1px solid #ccc',
+              borderRadius: '10px',
+              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+              backgroundColor: '#ffffff',
+            }}
+          >
+            <Box sx={{ textAlign: 'center', marginBottom: '20px' }}>
+              <img src={logo} alt="App Logo" style={{ width: '100px', height: 'auto' }} />
+            </Box>
+            <Typography variant="h4" align="center" gutterBottom>
+              Login
+            </Typography>
+            <form onSubmit={handleSubmit}>
+              <Box sx={{ marginBottom: '20px' }}>
+                <TextField
+                  type="email"
+                  name="email"
+                  variant="filled"
+                  fullWidth
+                  label="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  error={!!errors.email}
+                  helperText={errors.email}
+                />
+              </Box>
+              <Box sx={{ marginBottom: '20px' }}>
+                <TextField
+                  type="password"
+                  name="password"
+                  variant="filled"
+                  fullWidth
+                  label="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  error={!!errors.password}
+                  helperText={errors.password}
+                />
+              </Box>
+              <CustomButton type="submit" variant="contained" fullWidth>
+                Login
+              </CustomButton>
+            </form>
+            <Typography sx={{ textAlign: 'center', marginTop: '20px' }}>
+              <Link to="/forgot-password" style={{ textDecoration: 'none', color: '#1976d2' }}>
+                Forgot Password?
+              </Link>
+            </Typography>
+            <Typography sx={{ textAlign: 'center', marginTop: '20px' }}>
+              Don't have an account? <Link to="/signup" style={{ textDecoration: 'none', color: '#1976d2' }}>Sign Up</Link>
+            </Typography>
+            <Typography sx={{ textAlign: 'center', marginTop: '20px' }}>
+              <Link to="/privacy-policy" style={{ textDecoration: 'none', color: '#1976d2' }}>Privacy Policy</Link> | <Link to="/terms-of-service" style={{ textDecoration: 'none', color: '#1976d2' }}>Terms of Service</Link>
+            </Typography>
+          </Box>
+        </Grid>
+      </Grid>
+    </Container>
+  );
+};
 
 export default Login;

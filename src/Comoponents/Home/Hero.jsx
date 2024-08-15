@@ -15,7 +15,7 @@ const Hero = () => {
 
   return (
     <section className="hero">
-      <h1>Revolutionizing Risk Assessment with Real-Time IoT Data</h1>
+      <h1>Risk Assessment with Real-Time IoT Data</h1>
       <p>Track user data seamlessly and empower insurance companies with actionable insights.</p>
       <button className="btn-hero" onClick={handleGetStartedClick}>Get Started</button>
       <button className="btn-hero" onClick={handleDownloadClick}>Download App</button>
