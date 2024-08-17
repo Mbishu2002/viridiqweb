@@ -41,7 +41,7 @@ const InsurancePlans = () => {
   };
 
   const handlePlanClick = (id) => {
-    navigate(`dashboard/plan/${id}`);
+    navigate(`/dashboard/plan/${id}`);
   };
 
   return (
@@ -63,44 +63,60 @@ const InsurancePlans = () => {
         {insurancePlans.map(plan => (
           <Grid item xs={12} sm={6} md={4} key={plan.id}>
             <Paper
-              elevation={3}
+              elevation={4}
               sx={{
                 p: 2,
-                borderRadius: 2,
+                borderRadius: 3,
                 cursor: 'pointer',
                 display: 'flex',
-                alignItems: 'center',
+                flexDirection: 'column',
                 gap: 2,
-                backgroundColor: 'background.paper',
+                backgroundColor: 'background.default',
+                transition: 'background-color 0.3s',
                 '&:hover': {
-                  backgroundColor: 'action.hover'
-                }
+                  backgroundColor: 'action.hover',
+                },
               }}
               onClick={() => handlePlanClick(plan.id)}
             >
-              <IconifyIcon icon="ph:briefcase-light" style={{ color: 'green' }} />
-              <Box sx={{ flex: 1 }}>
-                <Typography variant="h6">{plan.name}</Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {plan.description}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Price: {plan.price}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {plan.subscribers.length} Subscribers
-                </Typography>
-                <Collapse in={expanded === plan.id}>
-                  <Divider sx={{ my: 2 }} />
-                  <List>
-                    {plan.subscribers.map((subscriber, index) => (
-                      <ListItem key={index}>
-                        <ListItemText primary={subscriber} />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Collapse>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <IconifyIcon icon="ph:briefcase-light" style={{ color: 'primary.main', fontSize: '2rem' }} />
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="h6" sx={{ mb: 1 }}>
+                    {plan.name}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+                    {plan.description}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+                    Price: {plan.price}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {plan.subscribers.length} Subscribers
+                  </Typography>
+                </Box>
               </Box>
+              <Collapse in={expanded === plan.id}>
+                <Divider sx={{ my: 2 }} />
+                <List>
+                  {plan.subscribers.map((subscriber, index) => (
+                    <ListItem key={index}>
+                      <ListItemText primary={subscriber} />
+                    </ListItem>
+                  ))}
+                </List>
+              </Collapse>
+              <Button
+                variant="text"
+                color="secondary"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setExpanded(expanded === plan.id ? null : plan.id);
+                }}
+                sx={{ alignSelf: 'flex-start', mt: 2 }}
+              >
+                {expanded === plan.id ? 'Show Less' : 'Show More'}
+              </Button>
             </Paper>
           </Grid>
         ))}

@@ -1,9 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import config from '@/config/config';
-import { useNavigate } from 'react-router-dom';
+import config from '../Config/config';
+import { useNavigate, Link } from 'react-router-dom';
 
-// Create a context for authentication
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {

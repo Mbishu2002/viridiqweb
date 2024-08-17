@@ -9,7 +9,7 @@ const Sidebar = () => {
   const location = useLocation();
 
   const menuItems = [
-    { text: 'Insurance Plans', path: '/dashboard/plans', icon: 'mdi:file-document' },
+    { text: 'Insurance Plans', path: '/dashboard/', icon: 'mdi:file-document' },
     { text: 'Clients', path: '/dashboard/clients', icon: 'mdi:account' },
     { text: 'Claims Requests', path: '/dashboard/claims', icon: 'mdi:home' },
     { text: 'Account', path: '/dashboard/account', icon: 'mdi:cog' },

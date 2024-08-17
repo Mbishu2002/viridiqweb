@@ -2,7 +2,8 @@ import React from 'react';
 import { TextField, Button, Container, Typography, Grid, Box, Link as MuiLink } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import logo from '../../Assets/logo.png';
 
 const SignupSchema = Yup.object().shape({
@@ -13,12 +14,30 @@ const SignupSchema = Yup.object().shape({
 });
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: { companyName: '', email: '', password: '', confirmPassword: '' },
     validationSchema: SignupSchema,
-    onSubmit: values => {
-      // Handle signup logic here
-      console.log(values);
+    onSubmit: async (values, { setSubmitting, setErrors }) => {
+      try {
+        const response = await axios.post('/api/signup', {
+          company_name: values.companyName,
+          email: values.email,
+          password: values.password,
+        });
+        if (response.status === 201) {
+          navigate('/login');
+        }
+      } catch (error) {
+        if (error.response && error.response.data) {
+          setErrors({ api: error.response.data.error });
+        } else {
+          setErrors({ api: 'An unexpected error occurred' });
+        }
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
 
@@ -102,6 +121,11 @@ const Signup = () => {
                   helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
                 />
               </Box>
+              {formik.errors.api && (
+                <Typography color="error" variant="body2" align="center">
+                  {formik.errors.api}
+                </Typography>
+              )}
               <Button
                 type="submit"
                 variant="contained"

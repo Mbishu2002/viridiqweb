@@ -6,6 +6,7 @@ import InsurancePlans from './InsurancePlans';
 import Clients from './Clients';
 import ClaimsRequests from './ClaimsRequests';
 import Account from './Account';
+import ClientDetail from './ClientDetails'
 import PlanDetail from './PlanDetails';
 
 const Dashboard = () => {
@@ -25,8 +26,9 @@ const Dashboard = () => {
       >
         <Container>
           <Routes>
-            <Route path="plans" element={<InsurancePlans />} />
+            <Route path="/" element={<InsurancePlans />} />
             <Route path="clients" element={<Clients />} />
+            <Route path="/clients/:id" element={<ClientDetail />} />
             <Route path="claims" element={<ClaimsRequests />} />
             <Route path="account" element={<Account />} />
             <Route path="plan/:id" element={<PlanDetail />} />
