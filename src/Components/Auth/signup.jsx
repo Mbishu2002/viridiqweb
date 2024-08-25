@@ -1,27 +1,44 @@
 import React from 'react';
-import { TextField, Button, Container, Typography, Grid, Box, Link as MuiLink } from '@mui/material';
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Grid,
+  Box,
+  Link as MuiLink,
+} from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import  useServiceApi  from '../Config/service'; 
 import logo from '../../Assets/logo.png';
 
+// Form validation schema using Yup
 const SignupSchema = Yup.object().shape({
-  companyName: Yup.string().required('Required'),
-  email: Yup.string().email('Invalid email').required('Required'),
-  password: Yup.string().min(6, 'Password too short').required('Required'),
-  confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match').required('Required')
+  companyName: Yup.string().required('Company Name is required'),
+  email: Yup.string().email('Invalid email format').required('Email is required'),
+  password: Yup.string().min(6, 'Password must be at least 6 characters long').required('Password is required'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Confirm Password is required'),
 });
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { registerInsuranceCompany } = useServiceApi(); 
 
   const formik = useFormik({
-    initialValues: { companyName: '', email: '', password: '', confirmPassword: '' },
+    initialValues: {
+      companyName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
     validationSchema: SignupSchema,
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
-        const response = await axios.post('/api/signup', {
+        const response = await registerInsuranceCompany({
           company_name: values.companyName,
           email: values.email,
           password: values.password,
@@ -30,11 +47,7 @@ const Signup = () => {
           navigate('/login');
         }
       } catch (error) {
-        if (error.response && error.response.data) {
-          setErrors({ api: error.response.data.error });
-        } else {
-          setErrors({ api: 'An unexpected error occurred' });
-        }
+        setErrors({ api: error.message || 'An unexpected error occurred' });
       } finally {
         setSubmitting(false);
       }
@@ -130,18 +143,30 @@ const Signup = () => {
                 type="submit"
                 variant="contained"
                 fullWidth
-                sx={{ marginTop: '20px', backgroundColor: 'green', '&:hover': { backgroundColor: 'darkgreen' } }}
+                sx={{
+                  marginTop: '20px',
+                  backgroundColor: 'green',
+                  '&:hover': { backgroundColor: 'darkgreen' },
+                }}
                 disabled={!formik.isValid || formik.isSubmitting}
               >
                 Sign Up
               </Button>
             </form>
             <Typography sx={{ textAlign: 'center', marginTop: '20px' }}>
-              Already have an account? <MuiLink component={Link} to="/login" underline="hover">Sign In</MuiLink>
+              Already have an account?{' '}
+              <MuiLink component={Link} to="/login" underline="hover">
+                Sign In
+              </MuiLink>
             </Typography>
             <Typography sx={{ textAlign: 'center', marginTop: '20px' }}>
-              <MuiLink component={Link} to="/privacy-policy" underline="hover">Privacy Policy</MuiLink> |{' '}
-              <MuiLink component={Link} to="/terms-of-service" underline="hover">Terms of Service</MuiLink>
+              <MuiLink component={Link} to="/privacy-policy" underline="hover">
+                Privacy Policy
+              </MuiLink>{' '}
+              |{' '}
+              <MuiLink component={Link} to="/terms-of-service" underline="hover">
+                Terms of Service
+              </MuiLink>
             </Typography>
           </Box>
         </Grid>

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { TextField, Button, Container, Typography, Grid, Box } from '@mui/material';
 import { styled } from '@mui/system';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../Assets/logo.png';
+import { AuthContext } from '../context/AuthContext';
 
 const CustomButton = styled(Button)({
   marginTop: '20px',
@@ -16,7 +17,9 @@ const CustomButton = styled(Button)({
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({ email: '', password: '', general: '' });
+  const { login } = useContext(AuthContext); 
+  const navigate = useNavigate(); 
 
   const validate = () => {
     let tempErrors = { email: '', password: '' };
@@ -30,11 +33,14 @@ const Login = () => {
     return Object.values(tempErrors).every(x => x === '');
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (validate()) {
-      // Handle login logic here
-      console.log({ email, password });
+      try {
+        await login(email, password ); 
+      } catch (error) {
+        setErrors(prev => ({ ...prev, general: 'Login failed. Please try again.' }));
+      }
     }
   };
 
@@ -92,6 +98,11 @@ const Login = () => {
                   helperText={errors.password}
                 />
               </Box>
+              {errors.general && (
+                <Typography color="error" sx={{ textAlign: 'center', marginBottom: '10px' }}>
+                  {errors.general}
+                </Typography>
+              )}
               <CustomButton type="submit" variant="contained" fullWidth>
                 Login
               </CustomButton>
@@ -102,10 +113,19 @@ const Login = () => {
               </Link>
             </Typography>
             <Typography sx={{ textAlign: 'center', marginTop: '20px' }}>
-              Don't have an account? <Link to="/signup" style={{ textDecoration: 'none', color: '#1976d2' }}>Sign Up</Link>
+              Don't have an account?{' '}
+              <Link to="/signup" style={{ textDecoration: 'none', color: '#1976d2' }}>
+                Sign Up
+              </Link>
             </Typography>
             <Typography sx={{ textAlign: 'center', marginTop: '20px' }}>
-              <Link to="/privacy-policy" style={{ textDecoration: 'none', color: '#1976d2' }}>Privacy Policy</Link> | <Link to="/terms-of-service" style={{ textDecoration: 'none', color: '#1976d2' }}>Terms of Service</Link>
+              <Link to="/privacy-policy" style={{ textDecoration: 'none', color: '#1976d2' }}>
+                Privacy Policy
+              </Link>{' '}
+              |{' '}
+              <Link to="/terms-of-service" style={{ textDecoration: 'none', color: '#1976d2' }}>
+                Terms of Service
+              </Link>
             </Typography>
           </Box>
         </Grid>
